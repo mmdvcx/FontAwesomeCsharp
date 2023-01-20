@@ -33,23 +33,32 @@
             // 
             // awesomeIcon1
             // 
-            this.awesomeIcon1.Font = new System.Drawing.Font("Font Awesome 6 Pro Regular", 30F);
+            this.awesomeIcon1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.awesomeIcon1.FlatAppearance.BorderSize = 0;
+            this.awesomeIcon1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.awesomeIcon1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.awesomeIcon1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.awesomeIcon1.Font = new System.Drawing.Font("Font Awesome 6 Pro Regular", 132.4171F);
+            this.awesomeIcon1.FontType = FontAwesomeCsharp.AwesomeIcon.FontIconTypes.Regular;
             this.awesomeIcon1.IconAutoSize = true;
-            this.awesomeIcon1.IconFont = FontAwesomeCsharp.AwesomeIcon.FontIconTypes.Brands;
-            this.awesomeIcon1.IconSize = 159.8313F;
-            this.awesomeIcon1.Location = new System.Drawing.Point(12, 12);
+            this.awesomeIcon1.IconSize = 132.4171F;
+            this.awesomeIcon1.Location = new System.Drawing.Point(0, 0);
             this.awesomeIcon1.Name = "awesomeIcon1";
-            this.awesomeIcon1.Size = new System.Drawing.Size(349, 309);
+            this.awesomeIcon1.Size = new System.Drawing.Size(373, 333);
             this.awesomeIcon1.TabIndex = 0;
+            this.awesomeIcon1.Text = "";
+            this.awesomeIcon1.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(373, 333);
             this.Controls.Add(this.awesomeIcon1);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }

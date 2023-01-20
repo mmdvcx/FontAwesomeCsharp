@@ -8,6 +8,7 @@ using System.Text;
 using static FontAwesomeCsharp.AwesomeIcon;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+using System.Drawing.Drawing2D;
 
 namespace FontAwesomeCsharp
 {
@@ -17,7 +18,7 @@ namespace FontAwesomeCsharp
         public string FontIcon_Unicode { get; set; }
         public FontIconTypes FontIcon_Type { get; set; }
     }
-    public partial class AwesomeIcon : Panel
+    public partial class AwesomeIcon : Button
     {
         public enum FontIconTypes
         {
@@ -29,54 +30,67 @@ namespace FontAwesomeCsharp
             Brands
         }
 
-        private string FontIcon_Name = "HouseChimneyBlank";
-        private string FontIcon_Unicode = FontUnicode.UnicodeToString("0xe3b0");
-        private Font FontIcon_Font = new Font(EmbedFont.RegularClass.Regular, 30);
-        private FontIconTypes FontIcon_Type = FontIconTypes.Regular;
-        private float fontIconSize = 30;
-        private bool iconAutoSize = true;
+        private string Icon_Text = "0xe3b0";        
+        private Font Icon_Font = new Font(EmbedFont.BrandsClass.Brands, 30);
+        private FontIconTypes Icon_Type = FontIconTypes.Regular;
+        private string Icon_Name = "HouseChimneyBlank";
+        private float Icon_Size = 30;
+        private bool Icon_AutoSize = true;
 
-        private Label label = new Label() { TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill, Font = new Font(EmbedFont.RegularClass.Regular, 30) };
         public AwesomeIcon()
         {
             this.Height = 60;
             this.Width = 60;
-            this.Font = FontIcon_Font;
-            Icon = new FontIcon() { FontIcon_Name = FontIcon_Name, FontIcon_Type = FontIconTypes.Regular, FontIcon_Unicode = FontIcon_Unicode };
-
             this.Resize += AwesomeIcon_Resize;
             this.DockChanged += AwesomeIcon_Resize;
             this.SizeChanged += AwesomeIcon_Resize;
-            this.Controls.Add(label);
+            this.ChangeUICues += AwesomeIcon_ChangeUICues;
+            this.Font = Icon_Font;
+            this.Text = Icon_Text;
+            this.FlatStyle = FlatStyle.Flat;
+            this.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            this.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            this.FlatAppearance.BorderSize = 0;
         }
 
+        protected override void OnPaint(PaintEventArgs pevent)
+        {
+            base.OnPaint(pevent);
+            pevent.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        }
+
+        private void AwesomeIcon_ChangeUICues(object sender, UICuesEventArgs e)
+        {
+            AwesomeIcon_Resize(null, null);
+        }
 
         private void AwesomeIcon_Resize(object sender, System.EventArgs e)
         {
             try
             {
-                if (iconAutoSize)
+                if (Icon_AutoSize)
                 {
-                    if (label.Text.Length == 0)
+                    if (Text.Length == 0)
                     {
                         return;
                     }
 
-                    float height = label.Height * 0.99f;
-                    float width = label.Width * 0.99f;
+                    float height = this.Height * 0.99f;
+                    float width = this.Width * 0.99f;
 
                     this.SuspendLayout();
 
-                    Font tryFont = label.Font;
-                    Size tempSize = TextRenderer.MeasureText(label.Text, tryFont);
+                    Font tryFont = this.Font;
+                    Size tempSize = TextRenderer.MeasureText(Text, tryFont);
 
                     float heightRatio = height / tempSize.Height;
                     float widthRatio = width / tempSize.Width;
 
                     IconSize = tryFont.Size * Math.Min(widthRatio, heightRatio);
-                    tryFont = new Font(tryFont.FontFamily, tryFont.Size * Math.Min(widthRatio, heightRatio), tryFont.Style);
 
-                    label.Font = tryFont;
+                    Icon_Font = new Font(tryFont.FontFamily, IconSize, tryFont.Style);
+                    this.Font = Icon_Font;
+
                     this.ResumeLayout();
                 }
             }
@@ -85,34 +99,37 @@ namespace FontAwesomeCsharp
             }
 
         }
-        public override bool AutoSize
+
+        public override Font Font
         {
-            get { return false; }
-            set { }
+            get { return base.Font; }
+            set { base.Font = Icon_Font; }
         }
-        public override DockStyle Dock { get => base.Dock; set { base.Dock = value; AwesomeIcon_Resize(null, null); } }
+
 
         [Category("Custom Button (mmdvcx)")]
-        public FontIconTypes IconFont
+        public FontIconTypes FontType
         {
-            get { return FontIcon_Type; }
+            get { return Icon_Type; }
             set
             {
-                FontIcon_Type = value;
-                if (label.Font != null) label.Font.Dispose();
+                Icon_Type = value;
 
-                if (FontIcon_Type == FontIconTypes.Regular)
-                    label.Font = new Font(EmbedFont.RegularClass.Regular, fontIconSize);
-                else if (FontIcon_Type == FontIconTypes.Solid)
-                    label.Font = new Font(EmbedFont.SolidClass.Solid, fontIconSize);
-                else if (FontIcon_Type == FontIconTypes.Light)
-                    label.Font = new Font(EmbedFont.LightClass.Light, fontIconSize);
-                else if (FontIcon_Type == FontIconTypes.Thin)
-                    label.Font = new Font(EmbedFont.ThinClass.Thin, fontIconSize);
-                else if (FontIcon_Type == FontIconTypes.Duotone)
-                    label.Font = new Font(EmbedFont.DuotoneClass.Duotone, fontIconSize);
-                else if (FontIcon_Type == FontIconTypes.Brands)
-                    label.Font = new Font(EmbedFont.BrandsClass.Brands, fontIconSize);
+                if (Icon_Type == FontIconTypes.Regular)
+                    Icon_Font = new Font(EmbedFont.RegularClass.Regular, Icon_Size);
+                else if (Icon_Type == FontIconTypes.Solid)
+                    Icon_Font = new Font(EmbedFont.SolidClass.Solid, Icon_Size);
+                else if (Icon_Type == FontIconTypes.Light)
+                    Icon_Font = new Font(EmbedFont.LightClass.Light, Icon_Size);
+                else if (Icon_Type == FontIconTypes.Thin)
+                    Icon_Font = new Font(EmbedFont.ThinClass.Thin, Icon_Size);
+                else if (Icon_Type == FontIconTypes.Duotone)
+                    Icon_Font = new Font(EmbedFont.DuotoneClass.Duotone, Icon_Size);
+                else if (Icon_Type == FontIconTypes.Brands)
+                    Icon_Font = new Font(EmbedFont.BrandsClass.Brands, Icon_Size);
+
+                this.Font = Icon_Font;
+                AwesomeIcon_Resize(null, null);
             }
         }
 
@@ -120,30 +137,28 @@ namespace FontAwesomeCsharp
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public object Icon
         {
-            get { return FontIcon_Name; }
+            get { return Icon_Name; }
             set
             {
                 if (value is FontIcon)
                 {
-                    FontIcon_Name = (value as FontIcon).FontIcon_Name;
-                    FontIcon_Unicode = (value as FontIcon).FontIcon_Unicode;
-                    label.Text = FontIcon_Unicode;
+                    Icon_Name = (value as FontIcon).FontIcon_Name;
+                    Icon_Text = (value as FontIcon).FontIcon_Unicode;
+                    this.Text = Icon_Text;
 
                     if ((value as FontIcon).FontIcon_Type == FontIconTypes.Duotone)
                     {
-                        IconFont = FontIconTypes.Duotone;
-                        label.Font = new Font(EmbedFont.DuotoneClass.Duotone, fontIconSize);
+                        FontType = FontIconTypes.Duotone;
                     }
                     else if ((value as FontIcon).FontIcon_Type == FontIconTypes.Brands)
                     {
-                        IconFont = FontIconTypes.Brands;
-                        label.Font = new Font(EmbedFont.BrandsClass.Brands, fontIconSize);
+                        FontType = FontIconTypes.Brands;
                     }
                     else
                     {
-                        IconFont = FontIconTypes.Regular;
-                        label.Font = new Font(EmbedFont.RegularClass.Regular, fontIconSize);
+                        FontType = FontIconTypes.Regular;
                     }
+                    AwesomeIcon_Resize(null, null);
                 }
             }
         }
@@ -151,23 +166,22 @@ namespace FontAwesomeCsharp
         [Category("Custom Button (mmdvcx)")]
         public float IconSize
         {
-            get { return fontIconSize; }
+            get { return Icon_Size; }
             set
             {
-                fontIconSize = value;
-                if (label.Font != null) label.Font.Dispose();
-
-                label.Font = new Font(this.Font.FontFamily, fontIconSize);
+                Icon_Size = value;
+                Icon_Font = new Font(Icon_Font.FontFamily, Icon_Size);
+                this.Font = Icon_Font;
             }
         }
 
         [Category("Custom Button (mmdvcx)")]
         public bool IconAutoSize
         {
-            get { return iconAutoSize; }
+            get { return Icon_AutoSize; }
             set
             {
-                iconAutoSize = value;
+                Icon_AutoSize = value;
             }
         }
     }
