@@ -10,8 +10,11 @@ Use Font Awesome Icons in C# Projects
 Custom Parameter : 
 
 FontType => [ Regular , Solid , Light , Thin , Duotone , Brands ]
+#
 Icon => GUI Selector Panel
+#
 IconAutoSize => bool
+#
 IconSize => number
 
 
